@@ -41,5 +41,93 @@
  *   // => { name: "Priya", totalMarks: 63, percentage: 31.5, grade: "F", ... }
  */
 export function generateReportCard(student) {
-  // Your code here
+    // Your code here
+
+    if (typeof student != "object") {
+        return null;
+    }
+
+    if (
+        student?.name == null ||
+        typeof student.name != "string" ||
+        student.name == ""
+    ) {
+        return null;
+    }
+
+    if (
+        typeof student.marks != "object" ||
+        Object.keys(student.marks).length == 0
+    ) {
+        return null;
+    }
+
+    let invalidMark = Object.values(student.marks).some(
+        (mark) => mark < 0 || mark > 100 || typeof mark != "number",
+    );
+
+    if (invalidMark) {
+        return null;
+    }
+
+    let totalMarks = Object.values(student.marks).reduce(
+        (acc, curr) => acc + curr,
+        0,
+    );
+
+    let perc = (totalMarks / (Object.values(student.marks).length * 100)) * 100;
+
+    let percentage = parseFloat(perc.toFixed(2));
+    let grade = "";
+
+    if (percentage >= 90) {
+        grade = "A+";
+    } else if (percentage >= 80) {
+        grade = "A";
+    } else if (percentage >= 70) {
+        grade = "B";
+    } else if (percentage >= 60) {
+        grade = "C";
+    } else if (percentage >= 40) {
+        grade = "D";
+    } else {
+        grade = "F";
+    }
+
+    let highest = Object.keys(student.marks).reduce((a, b) =>
+        student.marks[a] > student.marks[b] ? a : b,
+    );
+
+    let lowest = Object.keys(student.marks).reduce((a, b) =>
+        student.marks[a] < student.marks[b] ? a : b,
+    );
+
+    let passed = Object.keys(student.marks).filter(
+        (sub) => student.marks[sub] >= 40,
+    );
+
+    let failed = Object.keys(student.marks).filter(
+        (sub) => student.marks[sub] < 40,
+    );
+
+    let subjectCount = Object.keys(student.marks).length;
+
+    return {
+        name: student.name,
+        totalMarks: totalMarks,
+        percentage: percentage,
+        grade: grade,
+        highestSubject: highest,
+        lowestSubject: lowest,
+        passedSubjects: passed,
+        failedSubjects: failed,
+        subjectCount: subjectCount,
+    };
 }
+
+let card = generateReportCard({
+    name: "Topper",
+    marks: {},
+});
+
+console.log(card);

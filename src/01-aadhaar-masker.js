@@ -22,11 +22,21 @@
  *
  * @example
  *   maskAadhaar("123456781234")
- *   // => "XXXX-XXXX-1234"
+ *   // => "XXXX-XXXX-1234"`
  *
  *   maskAadhaar("9876")
  *   // => "INVALID"
  */
 export function maskAadhaar(aadhaarNumber) {
-  // Your code here
+    // Your code here
+    if (
+        typeof aadhaarNumber != "string" ||
+        aadhaarNumber.length != 12 ||
+        !/^\d+$/.test(aadhaarNumber)
+    ) {
+        return "INVALID";
+    }
+
+    let maskAadhaar = "X".repeat(8) + aadhaarNumber.slice(8);
+    return maskAadhaar.replace(/(.{4})/g, "$1-").replace(/-$/, "");
 }
